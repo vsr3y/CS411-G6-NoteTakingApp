@@ -4,14 +4,13 @@
 import NotesView from "./NotesView.js";                                      
 import NotesAPI from "./NotesAPI.js";
 
-import temp from "./temp.js"
+// import temp from "./temp.js";
 
 export default class App {
     constructor(root) {
         this.notes = [];
         this.activeNote = null;
         this.view = new NotesView(root, this._handlers());
-
         this._refreshNotes();
     }
 
@@ -73,7 +72,6 @@ export default class App {
                 NotesAPI.saveNote(currentNote);
                 this._refreshNotes();
             },
-
             onNoteDelete: noteId => {
                 NotesAPI.deleteNote(noteId);
                 this._refreshNotes();
@@ -87,6 +85,7 @@ export default class App {
             
             //  Built upon {onNoteAdd} 
             onNoteImport: (contentString, formatString) => {
+                var title, body;
                 [title, body] = NotesAPI.parseString(contentString, formatString);
                 const newNote = {
                     title,
@@ -100,7 +99,7 @@ export default class App {
                 // NotesAPI.prepareString( formatString, 
                 //                         this.activeNote.title,
                 //                         this.activeNote.body);
-                temp.testrun();
+                // temp.testrun();
             },
             // ▲
         };

@@ -1,7 +1,7 @@
 // NotesAPI.js
 // All automated functionalities go here.
 
-import saveAs from '../external/FileSaver.js/src/FileSaver.js';
+// import saveAs from '../external/FileSaver.js/src/FileSaver.js';
 
 
 export default class NotesAPI {
@@ -46,10 +46,11 @@ export default class NotesAPI {
         // get only a list of note objects that contain the keyword; 
         // no highlighting implementation needed for now.
         // return list of note objects which match the keyword.
-        const regex = new RegExp(queryString);
+        const regex = new RegExp(queryString, 'i');     // 'i' {RegExp.ignoreCase = 1}
         var notes = NotesAPI.getAllNotes();
-        matchedNotes = [];
-        for (const note in notes) {
+        var matchedNotes = [];
+        for (const note of notes) {
+            console.log(note.title, regex.test(note.title), note.body, regex.test(note.body));
             if (regex.test(note.title) | regex.test(note.body)) {
                 matchedNotes.push(note);
             }
@@ -70,14 +71,22 @@ export default class NotesAPI {
     }
 
     static parseTXT(contentString) {
-        // format: 'TITLE\r\n\r\nBODY'
+        // display:
+        // > TITLE
+        // > 
+        // > BODY
+        // format (to check against): 'TITLE\r\n\r\nBODY'
+        // an escaped character (e.g. '\r', '\n') count as 1 character
+
         // consume Line1 as TITLE
         // consume Line2
         // consume Line3 → EOF as BODY
         const i = contentString.indexOf('\r\n\r\n');
         if (i !== -1) {
             const title = contentString.substring(0, i);
-            const body = contentString.slice(i+8);
+            const body = contentString.substring(i+4);      
+            // {i+4} instead of {i+8} bc '\r\n\r\n' are 4 characters: 2 carriage returns and 2 newlines
+            console.log(contentString, i+8, [title, body]);
             return [title, body];
         } else {
             throw 'Cannot parse TXT.';
@@ -95,13 +104,12 @@ export default class NotesAPI {
 
     static parseJSON(contentString) {
         // format: '{\r\n    \"title\": \"TITLE\",\r\n    \"body\": \"BODY\"\r\n}'
-        if (contentString.substring(0, 22) === '{\r\n    \"title\": \"') {
+        if (contentString.substring(0, 18) === '{\r\n    \"title\": \"') {
             const i = contentString.indexOf('\",\r\n    \"body\": \"');
             const j = contentString.indexOf('\"\r\n}');
             if (i !== -1 && j !== -1) {
-                const title = contentString.substring(22, i);
-                var body = '"' + contentString.substring(i+23, j) + '"';
-                body = JSON.parse(body);
+                const title = contentString.substring(18, i);
+                const body = contentString.substring(i+17, j);
                 return [title, body];
             }
         }
@@ -114,9 +122,8 @@ export default class NotesAPI {
             const i = contentString.indexOf('</title>\r\n    <body>');
             const j = contentString.indexOf('</body>\r\n</content>');
             if (i !== -1 && j !== -1) {
-                const title = contentString.substring(70, i);
-                var body = '"' + contentString.substring(i+22, j) + '"';
-                body = JSON.parse(body);
+                const title = contentString.substring(62, i);
+                const body = contentString.substring(i+20, j);
                 return [title, body];
             }
         }
@@ -126,47 +133,47 @@ export default class NotesAPI {
 
     // >==EXPORT (TEXT PREPARATION)==<
 
-    //  Using eligrey/FileSaver.js (https://github.com/eligrey/FileSaver.js) for export,
-    // reciprocal to JavaScript's "FileReader" object.
-    static prepareString(formatString, title, body) {
-        var preparedString;
-        switch (formatString) {
-            case "txt": preparedString = this.prepareTXT(title, body);
-            case "md": preparedString = this.prepareMD(title, body);
-            case "json": preparedString = this.prepareJSON(title, body);
-            case "xml": preparedString = this.prepareXML(title, body);
-        }
+    // //  Using eligrey/FileSaver.js (https://github.com/eligrey/FileSaver.js) for export,
+    // // reciprocal to JavaScript's "FileReader" object.
+    // static prepareString(formatString, title, body) {
+    //     var preparedString;
+    //     switch (formatString) {
+    //         case "txt": preparedString = this.prepareTXT(title, body);
+    //         case "md": preparedString = this.prepareMD(title, body);
+    //         case "json": preparedString = this.prepareJSON(title, body);
+    //         case "xml": preparedString = this.prepareXML(title, body);
+    //     }
         
-        // FileSaver.js
-        var file = new File([preparedString], "untitled." + formatString, {type: "text/plain;charset=utf-8"});
-        FileSaver.saveAs(file);
-    }
+    //     // FileSaver.js
+    //     // var file = new File([preparedString], "untitled." + formatString, {type: "text/plain;charset=utf-8"});
+    //     // FileSaver.saveAs(file);
+    // }
 
-    static prepareTXT(title, body) {
-        return `${title}
+    // static prepareTXT(title, body) {
+    //     return `${title}
         
-        ${body}`;
-    }
+    //     ${body}`;
+    // }
 
-    static prepareMD(title, body) {
-        return `# ${title}
+    // static prepareMD(title, body) {
+    //     return `# ${title}
 
-        ${body}`;
-    }
+    //     ${body}`;
+    // }
 
-    static prepareJSON(title, body) {
-        return `{
-            "title": "${title}",
-            "body": "${JSON.stringify(body).slice(1, -1)}"
-        }`;
-    }
+    // static prepareJSON(title, body) {
+    //     return `{
+    //         "title": "${title}",
+    //         "body": "${JSON.stringify(body).slice(1, -1)}"
+    //     }`;
+    // }
 
-    static prepareXML(title, body) {
-        return `<?xml version="1.0" encoding="UTF-8"?>
-        <content>
-            <title>${title}</title>
-            <body>${JSON.stringify(body).slice(1, -1)}</body>
-        </content>`;
-    }
+    // static prepareXML(title, body) {
+    //     return `<?xml version="1.0" encoding="UTF-8"?>
+    //     <content>
+    //         <title>${title}</title>
+    //         <body>${JSON.stringify(body).slice(1, -1)}</body>
+    //     </content>`;
+    // }
     // ▲
 }

@@ -22,35 +22,28 @@ export default class NotesView {
         this.onNoteImport = onNoteImport;
         this.onNoteExport = onNoteExport;
 
-        this.root.innerHTML = 
-        `
-        <div class="notes__sidebar">
-            <a href="https://github.com/vsr3y/CS411-G6-NoteTakingApp">
-                <img class="notes__logo" src="./images/logo.png" href="https://github.com/vsr3y/CS411-G6-NoteTakingApp">
-            </a>
-            <div class="notes__header2">
-                <button class="notes__add" type="button">+</button>
-                <input class="notes__search" type="text" placeholder="Search notes...">
-            </div>
-            <div class="notes__header3">
-                <span>Import</span>
-                <input class="notes__import" type="file" id="file__import" style="width:74%" />
-            </div>
-            <div class="notes__header4">
-                <button class="notes__export" type="button">Export</button>
-            </div>
-            <div class="notes__list">
-                <div class="notes__list-item notes__list-item--selected">
-                    <div class="notes__small-title">Lecture Notes</div>
-                    <div class="notes__small-body">I learnt nothing today.</div>
-                    <div class="notes__small-updated">Thursday 3:30pm</div>
+        this.root.innerHTML = `
+            <div class="notes__sidebar">
+                <a href="https://github.com/vsr3y/CS411-G6-NoteTakingApp">
+                    <img class="notes__logo" src="./images/logo.png" href="https://github.com/vsr3y/CS411-G6-NoteTakingApp">
+                </a>
+                <div class="notes__header2">
+                    <button class="notes__add" type="button">+</button>
+                    <input class="notes__search" type="text" placeholder="Search notes...">
                 </div>
+                <div class="notes__header3">
+                    <span>Import</span>
+                    <input class="notes__import" type="file" id="file__import" style="width:74%" />
+                </div>
+                <div class="notes__header4">
+                    <button class="notes__export" type="button">Export</button>
+                </div>
+                <div class="notes__list"></div>
             </div>
-        </div>
-        <div class="notes__preview">
-            <input class="notes__title" type="text" placeholder="Enter a title..." />
-            <textarea class="notes__body">I am the notes body...</textarea>
-        </div>
+            <div class="notes__preview">
+                <input class="notes__title" type="text" placeholder="Enter a title..." />
+                <textarea class="notes__body">I am the notes body...</textarea>
+            </div>
         `;
         // ▲
 
@@ -101,42 +94,48 @@ export default class NotesView {
             if (!file) { return; }
 
             var reader = new FileReader();
-            var contentString;
+
+            // callback() is called after {readAsText()}!!!
+            function callback(THIS, contentString) {
+                // ▼DISREGARD
+                // // (1) {JSON.stringify(String)}
+                // //  Convert special invisible character (e.g TAB, ENTER, etc.) into escaped characters (e.g. \t, \n, etc.)
+                // //  ↳ Newline characters are converted into '\r\n' combo. ('\r' for Carriage Return)
+                // // (2) {String.slice(1, -1)}
+                // //  JSON.stringify() appends double-quotes for some reason (e.g. 'hi' → '"hi"')
+                // //  {String.slice(1 ,-1)} truncates these double-quotes.
+                // contentString = JSON.stringify(contentString);
+                // ▲DISREGARD
+
+                console.log(file);
+                console.log(contentString);
+                console.log(formatString);
+                console.log(THIS);
+
+                // Apparently, {this} object can't be accessed inside {callback()} for some reason.
+                THIS.onNoteImport(contentString, formatString);
+            };
 
             // reader.onload:
             //  Event handler fn to execute when {FileReader.load_event} is triggered by 
             //  {FileReader.readAs___} fn's. {FileReader.result} can't be accessed outside this fn.
+            // However, we can call a {callback()} from inside in order to use {reader.result}.
             // https://docs.w3cub.com/dom/filereader/onload
             // https://stackoverflow.com/a/26298948
-            reader.onload = readEvent => {
-                contentString = readEvent.target.result;
-                //  The following two outputs the same thing: imported file as a string.
-                // console.log(contentString);
-                // console.log(reader.result);
-
-                var t0 = JSON.stringify(contentString);
-                console.log(t0);
-                // console.log(JSON.parse(t0));
+            reader.onload = () => {
+                callback(this, reader.result);
             };
             reader.readAsText(file);
 
-            // READER.ONLOAD RUNS LATER THAN ▼, MAY NEED FIXING!
 
-            // (1) {JSON.stringify(String)}
-            //  Convert special invisible character (e.g TAB, ENTER, etc.) into escaped characters (e.g. \t, \n, etc.)
-            //  ↳ Newline characters are converted into '\r\n' combo. ('\r' for Carriage Return)
-            // (2) {String.slice(1, -1)}
-            //  JSON.stringify() appends double-quotes for some reason (e.g. 'hi' → '"hi"')
-            //  {String.slice(1 ,-1)} truncates these double-quotes.
-            contentString = JSON.stringify(contentString).slice(1, -1);
             
-            this.onNoteImport(contentString, formatString);
+
         });
         
         btnExport.addEventListener("click", () => {
             // TODO: add context menu here to determine which format to export as
 
-            this.onNoteExport(formatString);
+            // this.onNoteExport(formatString);
         })
         // ▲
 

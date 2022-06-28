@@ -11,22 +11,22 @@ TODO:
 
 [x] added notes__search 
 [x] ↳ config in main.css
-[ ] ↳ implement
-[ ]     ↳ imp: onNoteSearch(searchTerm)
+[x] ↳ implement
+[x]     ↳ imp: onNoteSearch(searchTerm)
 
 { }     ↳ multiple search terms with ,/; as divider e.g. "no;man;sky"?
 
 [x] added notes__import 
 [x] ↳ config in main.css
-[ ] ↳ implement
-[ ]     ↳ check file format
-[ ]     ↳ imp: onNoteImport(format)
+[x] ↳ implement
+[x]     ↳ check file format
+[x]     ↳ imp: onNoteImport(format)
 
 [x] added notes__export 
 [x] ↳ config in main.css
-[ ] ↳ implement
-[ ]     ↳ context menu for each file format
-[ ]     ↳ imp: onNoteExport(format)
+[x] ↳ implement
+[x]     ↳ context menu for each file format
+[x]     ↳ imp: onNoteExport(format)
 
 
 
