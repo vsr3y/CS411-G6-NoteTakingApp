@@ -1,0 +1,38 @@
+
+TODO:
+
+[x] added notes__logo + 
+[x] ↳ config in main.css
+[x] ↳ link to our github
+
+[x] change notes__add → notes__+ 
+[x] ↳ config in main.css
+
+
+[x] added notes__search 
+[x] ↳ config in main.css
+[ ] ↳ implement
+[ ]     ↳ imp: onNoteSearch(searchTerm)
+
+{ }     ↳ multiple search terms with ,/; as divider e.g. "no;man;sky"?
+
+[x] added notes__import 
+[x] ↳ config in main.css
+[ ] ↳ implement
+[ ]     ↳ check file format
+[ ]     ↳ imp: onNoteImport(format)
+
+[x] added notes__export 
+[x] ↳ config in main.css
+[ ] ↳ implement
+[ ]     ↳ context menu for each file format
+[ ]     ↳ imp: onNoteExport(format)
+
+
+
+[] 
+
+
+
+
+

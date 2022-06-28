@@ -1,0 +1,176 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.notes {
+    display: flex;
+    height: 100%;
+}
+
+.notes * {
+    font-family: sans-serif;
+}
+
+.notes__sidebar {
+    border-right: 2px solid #dddddd;
+    flex-shrink: 0;
+    overflow-y: auto;
+    padding: 1em;
+    width: 300px;
+}
+
+.notes__list-item {
+    cursor: pointer;
+}
+
+.notes__list-item--selected {
+    background: #eeeeee;
+    border-radius: 7px;
+    font-weight: bold;
+}
+
+.notes__small-title,
+.notes__small-updated {
+    padding: 10px;
+}
+
+.notes__small-title {
+    font-size: 1.2em;
+}
+
+.notes__small-body {
+    padding: 0 10px;
+}
+
+.notes__small-updated {
+    color: #aaaaaa;
+    font-style: italic;
+    text-align: right;
+}
+
+.notes__preview {
+    display: flex;
+    flex-direction: column;
+    padding: 2em 3em;
+    flex-grow: 1;
+}
+
+.notes__title,
+.notes__body {
+    border: none;
+    outline: none;
+    width: 100%;
+}
+
+.notes__title {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.notes__body {
+    flex-grow: 1;
+    font-size: 1.2em;
+    line-height: 1.5;
+    margin-top: 2em;
+    resize: none;
+}
+
+
+
+/* ADDED, TO BE RESORT */
+.notes__logo {
+    text-align: center;
+    alt: "Noted Logo";
+    width: 100%;
+}
+
+.notes__header2 {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.notes__add {
+    background: #3c9865;
+    border: none;
+    border-radius: 7px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    padding: 1em;
+    width: 12.5%;
+}
+
+.notes__add:hover {
+    background: #003719;
+}
+
+.notes__search {
+    background: #007535;
+    border: none;
+    border-radius: 7px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    padding: 1em;
+    margin: 0;
+    width: 77%;
+}
+
+.notes__search::placeholder {
+    color: rgb(233, 233, 233);
+}
+
+.notes__search:hover {
+    background: #003719;
+}
+
+.notes__header3 {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.notes__import {
+    background: #1941f5;
+    border: none;
+    border-radius: 7px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    padding: 1em;
+    /* width: 80%; */
+    /* ↳ doesn't work for <input> for some reason; using in-tag {style="width:80%"} instead  */
+}
+
+.notes__import:hover {
+    background: #01177d;
+}
+
+.notes__header4 {
+    /* overflow: hidden;
+    white-space: nowrap; */
+}
+
+.notes__export {
+    background: #b511fb;
+    border: none;
+    border-radius: 7px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    padding: 1em;
+    /* width: 80%; */
+}
+
+.notes__export:hover {
+    background: #660490;
+}
